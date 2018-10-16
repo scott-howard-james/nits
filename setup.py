@@ -12,7 +12,7 @@ from codecs import open
 from os import path
 
 here = path.abspath(path.dirname(__file__))
-from encyclopedia import __version__
+from nits import __version__
 
 # Get the long description from the README file
 #with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
@@ -33,7 +33,7 @@ setup(
     # There are some restrictions on what makes a valid project name
     # specification here:
     # https://packaging.python.org/specifications/core-metadata/#name
-    name='encyclopedia',  # Required
+    name='nits',  # Required
 
     # Versions should comply with PEP 440:
     # https://www.python.org/dev/peps/pep-0440/
@@ -46,7 +46,7 @@ setup(
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#summary
-    description='An Encyclopedia is an abstract container providing relational (and non-relational) data operations using dictionary notation',  # Required
+    description='Nits is small collection of classes and functions for tweaking python syntax',  # Required
 
     # This is an optional longer description of your project that represents
     # the body of text which users will see when they visit PyPI.
@@ -56,13 +56,13 @@ setup(
     #
     # This field corresponds to the "Description" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#description-optional
-    long_description='An Encyclopedia is an abstract container intended for smallish data sets which provides many of the benefits of a relational (and non-relational) database but with lower syntactic friction.  In particular, an Encyclopedia uses arithmetic expressions typical of first-class python objects (e.g. lists, dictionaries) to perform common dataset operations such as merging, subsetting and object combination. Encyclopedias supports functional composition so as to act on entire Encyclopedias in a single statement similar to data frame vectorization.',  # Optional
+    long_description='Nits is small collection of classes and functions for tweaking python syntax',  # Optional
 
     # This should be a valid link to your project's main homepage.
     #
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
-    url='https://github.com/scott-howard-james/encyclopedia',  # Optional
+    url='https://github.com/scott-howard-james/nits',  # Optional
 
     # This should be your name or the name of the organization which owns the
     # project.

@@ -1,7 +1,7 @@
 
 
-Casting
---------
+General Purpose Type Casting
+------------------------------
 
 .. autoclass:: nits.cast.Cast
     :members: __init__, cast
@@ -17,3 +17,10 @@ File Handling
 
 .. autoclass:: nits.file.CSV
     :members:
+
+UNIX Time (POSIX) Handling
+-----------------------------
+
+.. automodule:: nits.time
+    :members:
+

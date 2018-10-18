@@ -26,31 +26,31 @@ unix2date = datetime.utcfromtimestamp
 
 def now2unix():
     '''
-    current time as UNIX format
+    Current time in UNIX format
     '''
     return date2unix(datetime.utcnow())
 
 def now2time():
     '''
-    current time in datetime format
+    Current time in datetime format
     '''
     return datetime.now()
 
 def now2str(format=DEFAULT_DATETIME_STAMP):
     '''
-    current time in string format
+    Current time in string format
     '''
     return datetime.now().strftime(format)
 
 def str2unix(s, format=DEFAULT_DATETIME_STAMP): # string -> unix seconds
     '''
-    parse string to UNIX time
+    Parse string to UNIX time
     '''
-    return date2unix(datetime.strptime(s,format))
+    return date2unix(datetime.strptime(s, format))
 
 def unix2str(u, format=DEFAULT_DATETIME_STAMP, zone_offset=0): # unix seconds -> string
     '''
-    create string from UNIX time
+    Create string from UNIX time
     '''
     u = u + (zone_offset * 3600)
     return datetime.strftime(unix2date(u), format)
@@ -60,19 +60,19 @@ def time2date(t):
 
 def file2time(f):
     '''
-    get last modification time of file
+    Get last modification time of file
     '''
     return os.stat(f).st_mtime
 
 def time2file(f, time):
     '''
-    stamp modification time on file
+    Stamp modification time on file
     '''
     os.utime(f, (time, time))
 
 class Test_Time(unittest.TestCase):
     '''
-    collection of regression tests for UNIX time handling
+    Collection of regression tests for UNIX time handling
     '''
 
     def test_time(self):

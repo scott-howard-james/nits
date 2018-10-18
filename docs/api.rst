@@ -18,9 +18,8 @@ File Handling
 .. autoclass:: nits.file.CSV
     :members:
 
-UNIX Time (POSIX) Handling
+UNIX Time
 -----------------------------
 
 .. automodule:: nits.time
     :members:
-

@@ -2,7 +2,7 @@
 Nits
 ========================================
 
-Nits is a collection of small convenience functions and classes,
+Nits is a collection of convenience functions and classes,
 primarily for simplifying python syntax and smoothing some (at least in
 the opinon of the author) rough edges. Currently, it includes the
 following:

@@ -18,8 +18,11 @@ File Handling
 .. autoclass:: nits.file.CSV
     :members:
 
-UNIX Time
+Time
 -----------------------------
 
 .. automodule:: nits.time
+    :members:
+
+.. autoclass:: nits.reporter.Reporter
     :members:

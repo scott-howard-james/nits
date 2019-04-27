@@ -1,12 +1,12 @@
+'''
+Description:
+    Convenience functions and constants to deal with python's eclectic date-time packaging conventions
+'''
 # external
 from datetime import datetime
 import math
 import os
 import unittest
-
-'''
-Convenience functions and constants to deal with python's eclectic date-time packaging conventions
-'''
 
 EPOCH = datetime.utcfromtimestamp(0)
 DEFAULT_TIME_STAMP = '%H:%M:%S'
@@ -15,7 +15,7 @@ DEFAULT_DATETIME_STAMP = DEFAULT_DATE_STAMP + ' ' + DEFAULT_TIME_STAMP
 
 def date2unix(d):
     '''
-    convert python datetime to POSIX timestamp
+    convert python datetime to UNIX time format
     '''
     def total_seconds(td): # standard in 2.7
         return (td.microseconds + (
@@ -26,31 +26,31 @@ unix2date = datetime.utcfromtimestamp
 
 def now2unix():
     '''
-    Current time in UNIX format
+    current time in UNIX format
     '''
     return date2unix(datetime.utcnow())
 
 def now2time():
     '''
-    Current time in datetime format
+    current time in `datetime` format
     '''
     return datetime.now()
 
 def now2str(format=DEFAULT_DATETIME_STAMP):
     '''
-    Current time in string format
+    current time in string format
     '''
     return datetime.now().strftime(format)
 
 def str2unix(s, format=DEFAULT_DATETIME_STAMP): # string -> unix seconds
     '''
-    Parse string to UNIX time
+    parse string to UNIX time format
     '''
     return date2unix(datetime.strptime(s, format))
 
 def unix2str(u, format=DEFAULT_DATETIME_STAMP, zone_offset=0): # unix seconds -> string
     '''
-    Create string from UNIX time
+    create string from UNIX time forfmat
     '''
     u = u + (zone_offset * 3600)
     return datetime.strftime(unix2date(u), format)
@@ -60,19 +60,19 @@ def time2date(t):
 
 def file2time(f):
     '''
-    Get last modification time of file
+    get last modification time of file
     '''
     return os.stat(f).st_mtime
 
 def time2file(f, time):
     '''
-    Stamp modification time on file
+    stamp modification time on file
     '''
     os.utime(f, (time, time))
 
 class Test_Time(unittest.TestCase):
     '''
-    Collection of regression tests for UNIX time handling
+    Regression tests for time
     '''
 
     def test_time(self):

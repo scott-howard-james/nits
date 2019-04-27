@@ -17,8 +17,6 @@ class Cast:
     '''
     def __init__(self, cast, default=None, compare=0):
         '''
-        initializion
-
         - stores the casting function
         - creates an initial default value for the factory
         - performs a basic compare (1-cycle identity)

@@ -1,13 +1,16 @@
 
 
-General Purpose Type Casting
-------------------------------
+Classes
+-----------------------------
+
+Type Casting
+#############################
 
 .. autoclass:: nits.cast.Cast
     :members: __init__, cast
 
 File Handling
----------------
+###################
 
 .. autoclass:: nits.file.File
     :members:
@@ -18,11 +21,31 @@ File Handling
 .. autoclass:: nits.file.CSV
     :members:
 
-Time
+Reporting
+###################
+
+.. autoclass:: nits.reporter.Reporter
+    :members:
+
+Functions
 -----------------------------
+
+Time
+##########################
 
 .. automodule:: nits.time
     :members:
 
-.. autoclass:: nits.reporter.Reporter
-    :members:
+
+Command Line Scripts
+-----------------------------
+
+Repeating Commands
+###############################
+
+.. automodule:: nits.repeatit
+
+Executing Commands in Folders
+###############################
+
+.. automodule:: nits.doit

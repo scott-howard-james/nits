@@ -1,3 +1,7 @@
+'''
+Description:
+   A simple timestamping logging class
+'''
 # standard
 import logging
 import sys
@@ -30,12 +34,21 @@ class Reporter(logging.Logger):
         return message + ('' if target is None else '[' + str(target) + ']')
 
     def say(self, message, target=None):
+        '''
+        report message
+        '''
         self.info(self._target(message, target))
 
     def warn(self, message, target=None):
+        '''
+        report warning
+        '''
         self.warning(self._target(message, target))
 
     def abort(self, message, target=None):
+        '''
+        report error and exit
+        '''
         message = self._target(message, target)
         self.error(message)
         sys.exit(-1)

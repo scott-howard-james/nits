@@ -46,7 +46,7 @@ setup(
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#summary
-    description='Nits is small collection of classes and functions for tweaking python syntax',  # Required
+    description='Nits is small collection of classes, functions and utilities for tweaking python syntaxx',  # Required
 
     # This is an optional longer description of your project that represents
     # the body of text which users will see when they visit PyPI.
@@ -56,7 +56,7 @@ setup(
     #
     # This field corresponds to the "Description" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#description-optional
-    long_description='Nits is small collection of classes and functions for tweaking python syntax',  # Optional
+    long_description='Nits is small collection of classes, functions and utilities for tweaking python syntax',  # Optional
 
     # This should be a valid link to your project's main homepage.
     #
@@ -124,7 +124,8 @@ setup(
     #
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    #install_requires=['peppercorn'],  # Optional
+    install_requires=['docopt'],
+
 
     python_requires='>=3.4',
     # List additional groups of dependencies here (e.g. development
@@ -163,9 +164,10 @@ setup(
     #
     # For example, the following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
-    #entry_points={  # Optional
-    #    'console_scripts': [
-    #        'sample=sample:main',
-    #    ],
-    #},
+    entry_points={  # Optional
+        'console_scripts': [
+            'repeatit=nits.repeatit:process',
+            'doit=nits.doit:process',
+        ],
+    },
 )

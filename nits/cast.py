@@ -3,56 +3,116 @@ import math
 import re
 import unittest
 
-class Cast:
-    '''
-    Factory for creating "casts" (https://en.wikipedia.org/wiki/Type_conversion), that is, functions which:
+# Constants
 
-    1. change a value into another with the same semantic content but (perhaps) a different type
-    2. return a default value in the case of no parameters
+HEXADECIMAL = re.compile('[a-fA-F0-9]{2}') # preserve for speed
+
+# Functionals
+
+def cast(f, default=None):
+    '''
+    Return a function which:
+
+    1. changes a value into another with the same semantic content but (perhaps) a different type
+    2. returns a default value in the case of no parameters
 
     Notes:
 
-    - The intention of Cast is to provide a general capability similar to python typers such str() and int().
+    - The intention of *a* cast is to provide a general capability similar to python typers such str() and int()
+    - The purpose of *the* cast function is to allow reassignment of the default and to provide the identity check
     - It is assumed that casts reapplied to their own results are the identity function
     '''
-    def __init__(self, cast, default=None, compare=0):
-        '''
-        - stores the casting function
-        - creates an initial default value for the factory
-        - performs a basic compare (1-cycle identity)
-        '''
-        self.caster = cast
-        self.defaulter = default
-        assert cast(compare) == cast(cast(compare))
 
-    def cast(self, default=None):
-        '''
-        creates the casting function.  The class default may be overwritten here.
-        '''
-        def convert(thing=None):
-            if thing is not None:
-                return self.caster(thing)
-            elif default is not None:
-                return self.caster(default)
-            elif self.defaulter is not None:
-                return self.caster(self.defaulter)
-            elif self.defaulter is None and default is None and thing is None:
-                return self.caster()
-            else:
-                assert False # logic error
-        return convert
+    def inner(thing=None):
+        if thing is not None:
+            return f(thing)
+        elif default is not None:
+            return f(default)
+        else:
+            return f()
 
-class Make():
+    assert inner(default) == inner(inner(default)) # identity check
+    return inner
+
+def none(f):
     '''
-    A collection of useful conversions
+    Allow functions to return None
     '''
+    def inner(x=None):
+        if x is None:
+            return None
+        elif isinstance(x, str) and not x:
+            return None
+        else:
+            return f(x)
+    return inner
+
+class To():
+    '''
+    A collection of casting functions
+    '''
+
     @staticmethod
     def identity(x=None):
         return x
 
-    HEXADECIMAL = re.compile('[a-fA-F0-9]{2}') # preserve for speed
     @staticmethod
-    def hex_string(x):
+    def integer(x=0):
+        return int(To.numeric(x)) # handle strings representing fractions
+
+    string = str
+
+    @staticmethod
+    def numeric(x=0):
+        if isinstance(x, str) and not x:
+            return 0
+        else:
+            return float(x)
+
+    @staticmethod
+    def abs_numeric(x=0):
+        return abs(To.numeric(x))
+
+    @staticmethod
+    def abs_integer(x=0):
+        return abs(To.integer(x))
+
+    @staticmethod
+    def sign(x=0):
+        return float(x) and (1, -1)[float(x) < 0]
+
+    @staticmethod
+    def degree(x=0.0):
+        return float(x)%360
+
+    @staticmethod
+    def signed_degree(x=0.0):
+        y = To.degree(x)
+        return y - 360 if y > 180 else y
+
+    @staticmethod
+    def signed_degree_90(x=0):
+        y = To.signed_degree(x)
+        return To.sign(y)*(180 - abs(y)) if abs(y) > 90 else y
+
+    # demonstrate use of decorators
+
+    @staticmethod
+    @cast
+    def fraction(x=0):
+        '''
+        number between zero and one
+        '''
+        if x - x//1 == 0:
+            return 1 if x > 0 else 0
+        else:
+            return x % 1
+
+    # example of a decorator
+
+    @staticmethod
+    @cast
+    def hex_string(x='00'):
         '''
         create a To.hex_string, that is, '00'..'ff'.
         conversion depends on context:
@@ -67,106 +127,17 @@ class Make():
 
         if isinstance(x, str):
             assert len(x) == 2
-            assert Make.HEXADECIMAL.match(x)
+            assert HEXADECIMAL.match(x)
             return x.upper()
         elif isinstance(x, float) or isinstance(x, int):
             return hexed(int((1 if abs(x) >= 1 else abs(x) % 1)*255))
         else:
             assert False
 
-    @staticmethod
-    def sign(x=0):
-        return float(x) and (1, -1)[float(x) < 0]
-
-    @staticmethod
-    def degree(x=0.0):
-        return float(x)%360
-
-    @staticmethod
-    def signed_degree(x=0.0):
-        y = Make.degree(x)
-        return y - 360 if y > 180 else y
-
-    @staticmethod
-    def signed_degree_90(x=0):
-        y = Make.signed_degree(x)
-        return Make.sign(y)*(180 - abs(y)) if abs(y) > 90 else y
-
-    @staticmethod
-    def fraction(x=0):
-        '''
-        number between zero and one
-        '''
-        if x - x//1 == 0:
-            return 1 if x > 0 else 0
-        else:
-            return x % 1
-
-    @staticmethod
-    def numeric(x=0):
-        if isinstance(x, str) and not x:
-            return 0
-        else:
-            return float(x)
-
-    @staticmethod
-    def integer(x=0):
-        return int(Make.numeric(x)) # handle strings representing fractions
-
-    @staticmethod
-    def abs_numeric(x=0):
-        return abs(Make.numeric(x))
-
-    @staticmethod
-    def abs_integer(x=0):
-        return abs(Make.integer(x))
-
-
-    @staticmethod
-    def none(f):
-        def inner(x=None):
-            if x is None:
-                return None
-            elif isinstance(x, str) and not x:
-                return None
-            else:
-                return f(x)
-        return inner
-
-class To():
-    '''
-    A collection of useful casting functions
-    '''
-    # primitive type classes
-
-    Integer = Cast(Make.integer)
-    Numeric = Cast(Make.numeric)
-    String = Cast(str)
-    Fraction = Cast(Make.fraction)
-
-    # primitive type casts
-
-    integer = Integer.cast()
-    numeric = Numeric.cast()
-    string = String.cast()
-
-    # allow casts to return None
-
-    none_numeric = Cast(Make.none(Make.numeric)).cast()
-    none_integer = Cast(Make.none(Make.integer)).cast()
-    none_string = Cast(Make.none(str)).cast()
-
-    abs_numeric = Cast(Make.abs_numeric).cast()
-    abs_integer = Cast(Make.abs_integer).cast()
-
-    # more casts
-
-    fraction = Fraction.cast()
-    sign = Cast(Make.sign).cast()
-    degree = Cast(Make.degree).cast()
-    signed_degree = Cast(Make.signed_degree).cast()
-    signed_degree_90 = Cast(Make.signed_degree_90).cast()
-    hex_string = Cast(Make.hex_string, '00').cast()
+class Nones:
+    numeric = cast(none(To.numeric))
+    integer = cast(none(To.integer))
+    string = cast(none(str))
 
 class Test_Cast(unittest.TestCase):
 
@@ -174,7 +145,7 @@ class Test_Cast(unittest.TestCase):
         self.unknown = 'Unknown'
 
     def test_string(self):
-        unk = Cast(str).cast(self.unknown)
+        unk = cast(str, self.unknown)
         assert unk() is self.unknown
         assert unk(11) == '11'
 
@@ -191,21 +162,21 @@ class Test_Cast(unittest.TestCase):
         compare(-.1, .9)
 
     def test_primitives(self):
-        assert To.integer('2.12') == 2
+        assert To.integer('2.12') == To.integer('2.12') == 2
+        assert To.integer('11') == 11
         assert To.integer() is 0
-        assert To.none_integer() is None
+        assert Nones.integer() is None
         assert To.numeric() == 0.0
         assert To.numeric('') == 0.0
-        assert To.none_numeric() is None
-        assert To.none_numeric(1.1) == 1.1
-        assert To.none_numeric(0) == 0
-        assert To.none_string('') is None
-        assert To.none_string() is None
-        assert To.none_string(' ') == ' '
+        assert Nones.numeric() is None
+        assert Nones.numeric(1.1) == 1.1
+        assert Nones.numeric(0) == 0
+        assert Nones.string('') is None
+        assert Nones.string() is None
+        assert Nones.string(' ') == ' '
         assert To.string() == ''
         assert To.string(11) == '11'
         assert To.abs_integer('-1.03') == 1
-        assert To.Integer.cast(11)() == 11
 
     def test_hex_string(self):
         assert To.hex_string(1.) == To.hex_string(1) == To.hex_string('fF') == 'FF'
@@ -214,7 +185,7 @@ class Test_Cast(unittest.TestCase):
             assert To.hex_string(To.hex_string(thing)) == To.hex_string(thing)
 
     def test_identity(self):
-        identity = Cast(lambda x: x).cast(self.unknown)
+        identity = cast(lambda x: x, self.unknown)
         assert identity(11) == 11
         assert identity('hello') == 'hello'
         assert identity() == self.unknown

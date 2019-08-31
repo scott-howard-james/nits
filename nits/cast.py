@@ -103,6 +103,7 @@ class To():
         '''
         number between zero and one
         '''
+        x = float(x)
         if x - x//1 == 0:
             return 1 if x > 0 else 0
         else:

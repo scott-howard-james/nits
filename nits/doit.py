@@ -28,9 +28,8 @@ EXECUTABLES = {
 def files(folders):
     for folder in folders:
         for filename in Path(folder).iterdir():
-            if filename.is_file():
+            if filename.is_file() and str(filename).split('.')[-1] in EXECUTABLES:
                 yield filename
-
 
 def show(folders):
     PROGRAM_NAME_LENGTH = 20 # ToDo: calculate this dynamically
@@ -41,7 +40,7 @@ def show(folders):
         for file in files(folders):
             filename = str(file)
             with open(filename, 'r') as f:
-                text = [x.strip().lower() for x in f.readlines()]
+                text = [x.replace('#','').strip().lower() for x in f.readlines()]
                 description = text[text.index('description:')+1] if 'description:' in text else ''
                 yield filename.split('/')[-1], description
 
@@ -52,8 +51,7 @@ def find(code, folders):
     for file in files(folders):
         filename = str(file)
         if code == filename.split('/')[-1][:len(code)]:
-            if filename.split('.')[-1] in EXECUTABLES:
-                return filename
+            return filename
     return None
 
 def process():

@@ -3,9 +3,9 @@
 Description:
    Run another program from this folder
 
-Notes:
-    - All parameters are passed on to the <command>
-    - Use DOIT_FOLDER environment variable to change program folder
+Environment variables:
+    - DOITPATH:  assign program folder
+    - PYTHON: the python executable name (e.g. python3)
 
 Usage:
     doit [<command>] [<parameter>...]
@@ -22,7 +22,8 @@ import sys
 
 EXECUTABLES = {
     'py':'python',
-    'sh':'sh'
+    'sh':'sh',
+    'doit': ['/'.join(os.path.realpath(__file__).split('/')[:-1])]
 }
 
 def files(folders):
@@ -55,17 +56,19 @@ def find(code, folders):
     return None
 
 def process():
-    if 'DOIT_FOLDER' in os.environ:
-        folders = os.environ['DOIT_FOLDER'].split(':')
-    else:
-        folders = ['/'.join(os.path.realpath(__file__).split('/')[:-1])]
+    if 'DOITPATH' in os.environ:
+        EXECUTABLES['doit'] = [os.environ['DOITPATH']]
+    if 'PYTHON' in os.environ:
+        EXECUTABLES['py'] = os.environ['PYTHON']
+    if 'SHELL' in os.environ:
+        EXECUTABLES['sh'] = os.environ['SHELL']
 
     if len(sys.argv) < 2:
-        show(folders)
+        show(EXECUTABLES['doit'])
     else:
-        command = find(sys.argv[1], folders)
+        command = find(sys.argv[1], EXECUTABLES['doit'])
         if command is None:
-            show(folders)
+            show(EXECUTABLES['doit'])
         else:
             subprocess.Popen([EXECUTABLES[command.split('.')[-1]]] + [command] + sys.argv[2:]).wait()
 

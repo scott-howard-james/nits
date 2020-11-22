@@ -33,7 +33,7 @@ def files(folders):
                 yield filename
 
 def show(folders):
-    PROGRAM_NAME_LENGTH = 20 # ToDo: calculate this dynamically
+    PROGRAM_NAME_LENGTH = 20 # ToDo!: calculate this dynamically
 
     def descriptions(folders):
         yield 'program', 'description'
@@ -57,7 +57,7 @@ def find(code, folders):
 
 def process():
     if 'DOITPATH' in os.environ:
-        EXECUTABLES['doit'] = [os.environ['DOITPATH']]
+        EXECUTABLES['doit'] = os.environ['DOITPATH'].split(':')
     if 'PYTHON' in os.environ:
         EXECUTABLES['py'] = os.environ['PYTHON']
     if 'SHELL' in os.environ:

@@ -1,0 +1,3 @@
+build/*
+dist/*
+nits.egg-info/*

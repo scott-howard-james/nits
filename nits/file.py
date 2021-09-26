@@ -26,6 +26,16 @@ class File:
         '''
         assert False
 
+    @staticmethod
+    def decomment(file, comment):
+        for row in file:
+            if comment is None:
+                yield row
+            else:
+                raw = row.split(comment)[0].strip()
+                if raw:
+                    yield raw
+
 class Text(File):
     '''
     Instantiate the File class for a simple text file
@@ -80,13 +90,14 @@ class CSV(File):
     def read(cls,
         filename,
         header=True,
+        comment=None,
         fields=None):
         '''
         - header: is first line the header?
         - fields: optional list of field values
         '''
         with open(filename, 'rt') as file:
-            csv_file = csv.reader(file)
+            csv_file = csv.reader(File.decomment(file, comment))
             for i, record in enumerate(csv_file):
                 if len(record) == 0:
                     continue

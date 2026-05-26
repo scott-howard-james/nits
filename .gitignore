@@ -2,3 +2,4 @@ build/*
 dist/*
 nits.egg-info/*
 *.DS_Store
+*.pyc
